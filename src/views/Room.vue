@@ -9,10 +9,24 @@
         <v-layout wrap class="video-container">
           <v-flex xl8>
             <div class="iframe-container" :key="currentSource.service">
-              <youtube v-if="currentSource.service == 'youtube'" fit-parent resize :video-id="currentSource.id" ref="youtube" :player-vars="{ controls: 0 }" @playing="onPlaybackChange(true)" @paused="onPlaybackChange(false)" @ready="onPlayerReady_Youtube"/>
+              <youtube
+                v-if="currentSource.service == 'youtube'"
+                fit-parent
+                resize
+                :video-id="currentSource.id"
+                ref="youtube"
+                :player-vars="{ controls: 0 }"
+                @playing="onPlaybackChange(true)"
+                @paused="onPlaybackChange(false)"
+                @ready="onPlayerReady_Youtube"
+              />
             </div>
             <v-flex column class="video-controls">
-              <vue-slider v-model="sliderPosition" @change="sliderChange" :max="$store.state.room.currentSource.length"/>
+              <vue-slider
+                v-model="sliderPosition"
+                @change="sliderChange"
+                :max="$store.state.room.currentSource.length"
+              />
               <v-flex row align-center>
                 <v-btn @click="togglePlayback()">
                   <v-icon v-if="$store.state.room.isPlaying">fas fa-pause</v-icon>
@@ -21,10 +35,8 @@
                 <v-btn @click="skipVideo()">
                   <v-icon>fas fa-fast-forward</v-icon>
                 </v-btn>
-                <vue-slider v-model="volume" style="width: 150px; margin-left: 10px"/>
-                <div style="margin-left: 20px">
-                  {{ timestampDisplay }}
-                </div>
+                <vue-slider v-model="volume" style="width: 150px; margin-left: 10px" />
+                <div style="margin-left: 20px">{{ timestampDisplay }}</div>
               </v-flex>
             </v-flex>
           </v-flex>
@@ -34,22 +46,32 @@
             <v-tabs grow v-model="queueTab">
               <v-tab>
                 Queue
-                <span class="bubble">{{ $store.state.room.queue.length <= 99 ? $store.state.room.queue.length : "99+" }}</span>
+                <span
+                  class="bubble"
+                >{{ $store.state.room.queue.length <= 99 ? $store.state.room.queue.length : "99+" }}</span>
               </v-tab>
               <v-tab>Add</v-tab>
             </v-tabs>
             <v-tabs-items v-model="queueTab" class="queue-tab-content">
               <v-tab-item>
                 <div class="video-queue">
-                  <VideoQueueItem v-for="(itemdata, index) in $store.state.room.queue" :key="index" :item="itemdata"/>
+                  <VideoQueueItem
+                    v-for="(itemdata, index) in $store.state.room.queue"
+                    :key="index"
+                    :item="itemdata"
+                  />
                 </div>
               </v-tab-item>
               <v-tab-item>
                 <div class="video-add">
-                  <v-text-field placeholder="Video URL to add to queue" @change="onInputAddChange" v-model="inputAddUrlText"/>
+                  <v-text-field
+                    placeholder="Video URL to add to queue"
+                    @change="onInputAddChange"
+                    v-model="inputAddUrlText"
+                  />
                   <v-btn v-if="!production" @click="postTestVideo(0)">Add test video 0</v-btn>
                   <v-btn v-if="!production" @click="postTestVideo(1)">Add test video 1</v-btn>
-                  <VideoQueueItem v-for="(itemdata, index) in addPreview" :key="index" :item="itemdata" is-preview/>
+                   <VideoQueueItem v-for="(itemdata, index) in addPreview" :key="index" :item="itemdata" is-preview/>
                 </div>
               </v-tab-item>
             </v-tabs-items>
@@ -59,10 +81,16 @@
               <v-card>
                 <v-subheader>
                   Users
-                  <v-btn icon x-small @click="openEditName"><v-icon>fas fa-cog</v-icon></v-btn>
+                  <v-btn icon x-small @click="openEditName">
+                    <v-icon>fas fa-cog</v-icon>
+                  </v-btn>
                 </v-subheader>
                 <v-list-item v-if="showEditName">
-                  <v-text-field ref="editName" @change="onEditNameChange" placeholder="Set your name"/>
+                  <v-text-field
+                    ref="editName"
+                    @change="onEditNameChange"
+                    placeholder="Set your name"
+                  />
                 </v-list-item>
                 <v-list-item v-for="(user, index) in $store.state.room.users" :key="index">
                   {{ user.name }}
@@ -181,6 +209,12 @@ export default {
       API.post(`/room/${this.$route.params.roomId}/queue`, {
         url: this.inputAddUrlText,
       });
+    }, 
+    addAllToQueue() {
+      API.post(`/room/${this.$route.params.roomId}/queue`, {
+      service: "",
+      id: ""
+      });
     },
     openEditName() {
       this.showEditName = !this.showEditName;
@@ -267,7 +301,9 @@ export default {
   // width: 853px;
   margin: 10px;
 }
-.video-queue, .video-add, .user-list {
+.video-queue,
+.video-add,
+.user-list {
   margin: 0 10px;
   min-height: 500px;
 }
@@ -296,7 +332,7 @@ export default {
   width: 100%;
   height: 100%;
 }
-.bubble{
+.bubble {
   height: 25px;
   width: 25px;
   margin-left: 10px;
@@ -305,7 +341,7 @@ export default {
   display: inline-block;
 
   font-weight: bold;
-  color:#fff;
+  color: #fff;
   text-align: center;
   line-height: 1.8;
 }
